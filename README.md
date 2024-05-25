@@ -1,6 +1,6 @@
 <h1 align="center" id="title">Interactive Learning Platform</h1>
 
-<p id="description">A Streamlit-based web app to track user progress in various courses. Features include secure login course progress visualization interactive coding challenges and a leaderboard.</p>
+<p id="description">A Streamlit-based web app to track user progress in various courses. Features include secure login,course progress, visualization, interactive coding challenges and a leaderboard.</p>
 
   
   
