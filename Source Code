@@ -1,0 +1,133 @@
+import streamlit as st
+import pandas as pd
+import plotly.express as px
+
+user_data = {
+    "admin": {
+        "password": "password",
+        "progress": [
+            {'Course': 'Python', 'Progress': 80},
+            {'Course': 'Pandas', 'Progress': 60},
+            {'Course': 'Flask', 'Progress': 20},
+            {'Course': 'Scikit-Learn', 'Progress': 50},
+            {'Course': 'TensorFlow', 'Progress': 30}
+        ]
+    },
+    "user1": {
+        "password": "password123",
+        "progress": [
+            {'Course': 'Python', 'Progress': 90},
+            {'Course': 'Pandas', 'Progress': 70},
+            {'Course': 'Flask', 'Progress': 40},
+            {'Course': 'Scikit-Learn', 'Progress': 60},
+            {'Course': 'TensorFlow', 'Progress': 80}
+        ]
+    },
+    "user2": {
+        "password": "user2pass",
+        "progress": [
+            {'Course': 'Python', 'Progress': 50},
+            {'Course': 'Pandas', 'Progress': 40},
+            {'Course': 'Flask', 'Progress': 30},
+            {'Course': 'Scikit-Learn', 'Progress': 20},
+            {'Course': 'TensorFlow', 'Progress': 60}
+        ]
+    }
+}
+
+def display_login_page():
+    st.title("Interactive Learning Platform")
+    st.header("Login")
+
+    st.markdown("""
+        <style>
+            .main {
+                background-color: #f0f2f6;
+            }
+            .stButton>button {
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                margin: 4px 2px;
+                cursor: pointer;
+                border-radius: 8px;
+            }
+            .stTextInput>div>div>input {
+                padding: 10px;
+                border-radius: 8px;
+                border: 1px solid #ccc;
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+    username = st.text_input("Username")
+    password = st.text_input("Password", type="password")
+
+    if st.button("Login"):
+        if username in user_data and user_data[username]["password"] == password:
+            st.session_state['logged_in'] = True
+            st.session_state['username'] = username
+            st.experimental_rerun()
+        else:
+            st.error("Invalid username or password")
+
+def display_main_app():
+    st.sidebar.title('Navigation')
+    page = st.sidebar.selectbox('Select a page', ['Home', 'Courses', 'Coding Challenges', 'Leaderboard'])
+
+    username = st.session_state['username']
+    user_progress = user_data[username]['progress']
+
+    if page == 'Home':
+        st.header('Welcome to Interactive Learning Platform')
+        st.write('Our platform helps you learn various topics through interactive challenges and courses.')
+        st.image("Image.png", use_column_width=True)
+
+    elif page == 'Courses':
+        st.header('Courses')
+        st.write('Here are some courses to get you started:')
+        st.write('Course data is not available in this demo.')
+
+        # Here you can provide instructions on how users can integrate their own course data
+
+        st.subheader('Your Course Progress')
+        progress_df = pd.DataFrame(user_progress)
+        fig = px.bar(progress_df, x='Course', y='Progress', title='Course Progress')
+        st.plotly_chart(fig)
+
+    elif page == 'Coding Challenges':
+        st.header('Coding Challenges')
+        st.write('Test your skills with these coding challenges:')
+        st.write('Coding challenge data is not available in this demo.')
+
+        # Here you can provide instructions on how users can integrate their own coding challenge data
+
+        st.subheader('Code Editor')
+        st.text_area('Write your code here', height=300)
+        if st.button('Submit'):
+            st.success('Code submitted successfully!')
+
+    elif page == 'Leaderboard':
+        st.header('Leaderboard')
+        st.write('Top performers on the platform:')
+        st.write('Leaderboard data is not available in this demo.')
+
+        # Here you can provide instructions on how users can integrate their own leaderboard data
+
+def main():
+    if 'logged_in' not in st.session_state:
+        st.session_state['logged_in'] = False
+
+    if st.session_state['logged_in']:
+        display_main_app()
+    else:
+        display_login_page()
+
+
+if __name__ == '__main__':
+    main()
